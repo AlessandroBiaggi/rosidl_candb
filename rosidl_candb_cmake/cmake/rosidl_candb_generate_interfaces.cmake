@@ -305,16 +305,16 @@ macro(rosidl_candb_generate_interfaces target)
         foreach (_pkt_tuple ${_pkt_tuples})
             string(REGEX REPLACE ":" ";" _pkt_list "${_pkt_tuple}")
 
-            list(GET _pkt_list 1 _db_relpath)
+            list(GET _pkt_list 0 _db_relpath)
             file(TO_CMAKE_PATH "${_db_relpath}" _db_relpath)
 
-            list(GET _pkt_list 2 _pkt_message)
+            list(GET _pkt_list 1 _pkt_message)
             file(TO_CMAKE_PATH "${_pkt_message}" _pkt_message)
 
-            list(GET _pkt_list 4 _pkt_relpath)
+            list(GET _pkt_list 2 _pkt_relpath)
             file(TO_CMAKE_PATH "${_pkt_relpath}" _pkt_relpath)
 
-            list(GET _pkt_list 5 _spkt_relpath)
+            list(GET _pkt_list 3 _spkt_relpath)
             file(TO_CMAKE_PATH "${_spkt_relpath}" _spkt_relpath)
 
             list(APPEND _pkt_file_lines "${_db_relpath}:${_pkt_message}:${_pkt_relpath}:${_spkt_relpath}")
@@ -323,19 +323,19 @@ macro(rosidl_candb_generate_interfaces target)
         foreach (_sig_tuple ${_sig_tuples})
             string(REGEX REPLACE ":" ";" _sig_list "${_sig_tuple}")
 
-            list(GET _sig_list 1 _db_relpath)
+            list(GET _sig_list 0 _db_relpath)
             file(TO_CMAKE_PATH "${_db_relpath}" _db_relpath)
 
-            list(GET _sig_list 2 _sig_message)
+            list(GET _sig_list 1 _sig_message)
             file(TO_CMAKE_PATH "${_sig_message}" _sig_message)
 
-            list(GET _sig_list 3 _sig_name)
+            list(GET _sig_list 2 _sig_name)
             file(TO_CMAKE_PATH "${_sig_name}" _sig_name)
 
-            list(GET _sig_list 5 _sig_idl_relpath)
+            list(GET _sig_list 3 _sig_idl_relpath)
             file(TO_CMAKE_PATH "${_sig_idl_relpath}" _sig_idl_relpath)
 
-            list(GET _sig_list 6 _sig_idl_field)
+            list(GET _sig_list 4 _sig_idl_field)
             file(TO_CMAKE_PATH "${_sig_idl_field}" _sig_idl_field)
 
             list(APPEND _sig_file_lines "${_db_relpath}:${_sig_message}:${_sig_name}:${_sig_idl_relpath}:${_sig_idl_field}")

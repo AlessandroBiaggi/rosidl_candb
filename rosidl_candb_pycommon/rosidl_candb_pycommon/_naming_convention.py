@@ -18,4 +18,7 @@ class NamingConvention(ABC):
             *components: Iterable[str or None],
             glue: str = '__',
     ) -> str:
-        return glue.join(filter(not_none, components))
+        constant_name = glue.join(filter(not_none, components))
+        if len(constant_name) > 0 and constant_name[0].isdigit():
+            constant_name = 'c_' + constant_name
+        return constant_name

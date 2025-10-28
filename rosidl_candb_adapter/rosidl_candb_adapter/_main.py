@@ -103,8 +103,7 @@ def main(argv: List[str] = sys.argv[1:]) -> int:
                 strict=arguments.get('strict', False),
             )
             idl_tuples.extend([
-                (base_path,
-                 relative_path,
+                (relative_path,
                  message_name,
                  *map(lambda f: f.relative_to(args.output_dir), abs_idl_files),
                  signal_field_name_mapping)
@@ -123,13 +122,13 @@ def main(argv: List[str] = sys.argv[1:]) -> int:
             args.pkt_output_file.open('w') as g,
             args.sig_output_file.open('w') as h,
         ):
-            for base_path, relative_path, message_name, interface_relpath, stamped_interface_relpath, signal_field_mapping in idl_tuples:
+            for relative_path, message_name, interface_relpath, stamped_interface_relpath, signal_field_mapping in idl_tuples:
                 f.write(f"{args.output_dir}:{interface_relpath}\n".replace(os.sep, '/'))
                 f.write(f"{args.output_dir}:{stamped_interface_relpath}\n".replace(os.sep, '/'))
-                g.write(f"{base_path}:{relative_path}:{message_name}:{args.output_dir}:{interface_relpath}:{stamped_interface_relpath}\n".replace(os.sep, '/'))
+                g.write(f"{relative_path}:{message_name}:{interface_relpath}:{stamped_interface_relpath}\n".replace(os.sep, '/'))
 
                 for signal_name, field_name in signal_field_mapping.items():
-                    h.write(f"{base_path}:{relative_path}:{message_name}:{signal_name}:{args.output_dir}:{interface_relpath}:{field_name}\n".replace(os.sep, '/'))
+                    h.write(f"{relative_path}:{message_name}:{signal_name}:{interface_relpath}:{field_name}\n".replace(os.sep, '/'))
 
     except Exception as e:
         raise RuntimeError(f"Could not write output file") from e

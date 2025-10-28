@@ -1,5 +1,7 @@
 @{
-from rosidl_candb_pycommon.utils import message_constants
+from rosidl_candb_pycommon.utils import \
+    message_constants, \
+    escape
 
 from rosidl_candb_adapter import deduce_idl_type
 from rosidl_candb_adapter import format_idl_constant
@@ -16,11 +18,11 @@ module @(struct_name)_Constants {
     const @(signal_idl_type) @(naming_convention.scale(struct_name, signal.name)) = @(format_idl_constant(constant['scale'], signal_idl_type));
     const @(signal_idl_type) @(naming_convention.offset(struct_name, signal.name)) = @(format_idl_constant(constant['offset'], signal_idl_type));
 @[  if 'initial' in constant]@
-    @@verbatim(language="comment", text="@(signal.name) initial value")
+    @@verbatim(language="comment", text="@(escape(signal.name, quote='"')) initial value")
     const @(signal_idl_type) @(naming_convention.initial(struct_name, signal.name)) = @(format_idl_constant(constant['initial'], signal_idl_type));
 @[  end if]@
 @[  if 'invalid' in constant]@
-    @@verbatim(language="comment", text="@(signal.name) invalid value")
+    @@verbatim(language="comment", text="@(escape(signal.name, quote='"')) invalid value")
     const @(signal_idl_type) @(naming_convention.invalid(struct_name, signal.name)) = @(format_idl_constant(constant['invalid'], signal_idl_type));
 @[  end if]@
 @[  if 'choices' in constant]@
@@ -35,11 +37,11 @@ module @(struct_name)_Constants {
 @[      end for]@
 @[      for choice_name, choices in unique_choices.items()]@
 @[          if len(choices) == 1]@
-    @@verbatim(language="comment", text="@(signal.name): '@(choices[0].name)' = @(choices[0].value)")
+    @@verbatim(language="comment", text="@(escape(signal.name, quote='"')): '@(escape(choices[0].name, quote='"'))' = @(choices[0].value)")
     const @(signal_idl_type) @(choice_name) = @(format_idl_constant(choices[0].value, signal_idl_type));
 @[          else]@
 @[              for choice in choices]@
-    @@verbatim(language="comment", text="@(signal.name): @(choice.name) = @(choice.value)")
+    @@verbatim(language="comment", text="@(escape(signal.name, quote='"')): '@(escape(choice.name, quote='"'))' = @(choice.value)")
 @{                  choice_value = format_idl_constant(choice.value, signal_idl_type) }@
     const @(signal_idl_type) @(choice_name)__@(choice_value) = @(choice_value);
 @[              end for]@

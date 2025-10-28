@@ -44,6 +44,8 @@ class IdlNamingConvention(NamingConvention):
 
     def field(self, _message_name: str, signal_name: str) -> str:
         field_name = to_snake_case(signal_name)
+        if len(field_name) > 0 and field_name[0].isdigit():
+            field_name = 'f_' + field_name
         while field_name in KEYWORDS:
             field_name += '_'
         return field_name
@@ -60,21 +62,21 @@ class IdlNamingConvention(NamingConvention):
     def is_fd(self, _message_name: str) -> str:
         return 'IS_FD'
 
-    def scale(self, _message_name: str, signal_name: str) -> str:
-        return f"{to_snake_case(signal_name).upper()}_SCALE"
+    def scale(self, message_name: str, signal_name: str) -> str:
+        return f"{self.field(message_name, signal_name).upper()}_SCALE"
 
-    def offset(self, _message_name: str, signal_name: str) -> str:
-        return f"{to_snake_case(signal_name).upper()}_OFFSET"
+    def offset(self, message_name: str, signal_name: str) -> str:
+        return f"{self.field(message_name, signal_name).upper()}_OFFSET"
 
     def stamped_length(self, message_name: str) -> str:
-        return f"_{self.struct_field_name(message_name)}_type::{self.length()}"
+        return f"{self.struct_field_name(message_name)}_type::{self.length(message_name)}"
 
     def choice(
             self,
             message_name: str,
             signal_name: str,
             choice_name: str,
-            index: int or str = None
+            index: int | str = None
     ) -> str:
         return NamingConvention.constant(
             to_snake_case(message_name).upper(),

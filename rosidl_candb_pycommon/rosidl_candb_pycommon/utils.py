@@ -11,8 +11,11 @@ def not_none(x: Any) -> bool:
     return x is not None
 
 
-def escape(text: str) -> str:
-    return repr(text)
+def escape(text: str, quote: str = None) -> str:
+    text = repr(text)
+    if quote:
+        text = text.replace(quote, f"\\{quote}")
+    return text
 
 
 def message_constants(message: 'cantools.database.Message') -> dict:
