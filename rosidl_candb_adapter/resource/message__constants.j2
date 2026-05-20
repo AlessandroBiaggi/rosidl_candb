@@ -1,0 +1,53 @@
+uint32 {{ naming_convention.id(message) }} = {{ format_message_constant(message.frame_id, 'uint32') }}
+uint32 {{ naming_convention.dlc(message) }} = {{ format_message_constant(message.length, 'uint32') }}
+bool {{ naming_convention.is_fd(message) }} = {{ format_message_constant(message.is_fd, 'bool') }}
+{% if message.cycle_time is not none -%}
+uint32 {{ naming_convention.cycle_time(message) }} = {{ format_message_constant(message.cycle_time, 'uint32') }}
+{% endif %}
+{% for signal, constants in message_constants.items() -%}
+#
+# {{ signal.name }}
+#
+{% set signal_message_type = deduce_message_type(signal) -%}
+{{ signal_message_type }} {{ naming_convention.scale(message, signal) }} = {{ format_message_constant(constants['scale'], signal_message_type) }}
+{{ signal_message_type }} {{ naming_convention.offset(message, signal) }} = {{ format_message_constant(constants['offset'], signal_message_type) }}
+
+{%- if 'maximum' in constants or 'minimum' in constants %}
+
+{%- if 'maximum' in constants %}
+{{ signal_message_type }} {{ naming_convention.maximum(message, signal) }} = {{ format_message_constant(constants['maximum'], signal_message_type) }}
+{%- endif %}
+{%- if 'minimum' in constants %}
+{{ signal_message_type }} {{ naming_convention.minimum(message, signal) }} = {{ format_message_constant(constants['minimum'], signal_message_type) }}
+{%- endif %}
+{%- endif %}
+
+{%- if 'initial' in constants or 'invalid' in constants %}
+
+{%- if 'initial' in constants %}
+{{ signal_message_type }} {{ naming_convention.initial(message, signal) }} = {{ format_message_constant(constants['initial'], signal_message_type) }}
+{%- endif %}
+{%- if 'invalid' in constants %}
+{{ signal_message_type }} {{ naming_convention.invalid(message, signal) }} = {{ format_message_constant(constants['invalid'], signal_message_type) }}
+{%- endif %}
+{%- endif %}
+
+{%- if 'choices' in constants and constants['choices'] %}
+
+{% for choices in constants['choices'].values() -%}
+{% if choices|length == 1 -%}
+# '{{ choices[0].name }}' = {{ choices[0].value }}
+{{ signal_message_type }} {{ naming_convention.choice(message, signal, choices[0]) }} = {{ format_message_constant(choices[0].value, signal_message_type) }}
+{% else -%}
+{% for choice in choices -%}
+# '{{ choice.name }}' = {{ choice.value }}
+{% set choice_value = format_message_constant(choice.value, signal_message_type) -%}
+{{ signal_message_type }} {{ naming_convention.choice(message, signal, choice) }}__{{ choice_value }} = {{ choice_value }}
+{% endfor -%}
+{% endif -%}
+{% endfor -%}
+{%- endif %}
+{%- if not loop.last %}
+
+{% endif %}
+{%- endfor -%}

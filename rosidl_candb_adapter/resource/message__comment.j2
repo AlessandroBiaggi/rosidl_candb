@@ -1,0 +1,30 @@
+#
+# {{ message.name }}
+{%- if message.senders %}
+#
+# Senders:
+{%- for node in message.senders %}
+#  - {{ node }}
+{%- endfor %}
+{%- endif %}
+{%- if message.receivers %}
+#
+# Receivers:
+{%- for node in message.receivers %}
+#  - {{ node }}
+{%- endfor %}
+{%- endif %}
+{%- if message.comments %}
+#
+# Comments:
+{%- for comment in message.comments.values() %}
+{%- for line in comment.replace('\r', '').split('\n') %}
+{%- if loop.first %}
+#  - {{ line | replace('\t', '    ') }}
+{%- else %}
+#    {{ line | replace('\t', '    ') }}
+{%- endif %}
+{%- endfor %}
+{%- endfor %}
+{%- endif %}
+#

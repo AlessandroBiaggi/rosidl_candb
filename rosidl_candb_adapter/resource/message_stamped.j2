@@ -1,0 +1,6 @@
+{% include 'message__comment.j2' %}
+
+{% include 'message__constants.j2' %}
+
+std_msgs/Header {{ naming_convention.header_field_name(message) }}
+{{ naming_convention.message_name(message) }} {{ naming_convention.stamped_message_field_name(message) }}

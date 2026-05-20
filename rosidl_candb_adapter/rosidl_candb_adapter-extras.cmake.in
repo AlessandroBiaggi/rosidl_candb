@@ -1,0 +1,13 @@
+# generated from
+# rosidl_candb_adapter/rosidl_candb_adapter-extras.cmake.in
+
+find_package(Python3 REQUIRED QUIET COMPONENTS Interpreter)
+
+include("${rosidl_candb_adapter_DIR}/register_adapter.cmake")
+include("${rosidl_candb_adapter_DIR}/rosidl_candb_adapt_interfaces.cmake")
+
+rosidl_candb_adapter_c_extras(
+        "${rosidl_candb_adapter_DIR}/../../../lib/rosidl_candb_adapter/rosidl_candb_adapter"
+        "${rosidl_candb_adapter_DIR}/../../../@PYTHON_INSTALL_DIR@/rosidl_candb_adapter/__init__.py"
+        "${rosidl_candb_adapter_DIR}/../resource"
+)

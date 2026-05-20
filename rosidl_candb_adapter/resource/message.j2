@@ -1,0 +1,32 @@
+{% include 'message__comment.j2' %}
+
+{% include 'message__constants.j2' %}
+
+{% for signal in message.signals -%}
+#
+# {{ signal.name }}
+#
+{%- if signal.minimum is not none or signal.maximum is not none %}
+# Range: {{ signal.minimum if signal.minimum is not none else '' }}..{{ signal.maximum if signal.maximum is not none else '' }}
+{%- endif %}
+{%- if signal.unit %}
+# Unit: {{ signal.unit }}
+{%- endif %}
+{%- if signal.comments %}
+#
+# Comments:
+{%- for comment in signal.comments.values() %}
+{%- for line in comment.replace('\r', '').split('\n') %}
+{%- if loop.first %}
+#  - {{ line | replace('\t', '    ') }}
+{%- else %}
+#    {{ line | replace('\t', '    ') }}
+{%- endif %}
+{%- endfor %}
+{%- endfor %}
+{%- endif %}
+#
+{{ deduce_message_type(signal) }} {{ naming_convention.field_name(message, signal) }}
+{% if not loop.last %}
+{% endif %}
+{%- endfor %}
