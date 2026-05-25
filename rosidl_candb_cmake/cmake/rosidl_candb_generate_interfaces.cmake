@@ -260,9 +260,24 @@ macro(rosidl_candb_generate_interfaces target)
     endforeach ()
 
     add_custom_target(
-            "${target}" ALL
+            "${target}__msgs" ALL
             DEPENDS ${_interface_files} ${_target_dependencies}
             SOURCES ${_interface_files}
+    )
+
+    set(_rosidl_msg_tuples)
+    foreach (_msg_tuple ${_msg_tuples})
+        string(REPLACE ":" ";" _msg_tuple_parts ${_msg_tuple})
+        list(GET _msg_tuple_parts 3 _msg_base_path)
+        list(GET _msg_tuple_parts 4 _msg_interface)
+        list(APPEND _rosidl_msg_tuples "${_msg_base_path}:${_msg_interface}")
+    endforeach ()
+
+    rosidl_generate_interfaces(
+            "${PROJECT_NAME}"
+            ${_rosidl_msg_tuples}
+            DEPENDENCIES
+            "std_msgs"
     )
 
     #[[

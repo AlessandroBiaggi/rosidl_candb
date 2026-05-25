@@ -22,25 +22,13 @@ uint32 {{ naming_convention.cycle_time(message) }} = {{ format_message_constant(
 {%- endif %}
 {%- endif %}
 
-{%- if 'initial' in constants or 'invalid' in constants %}
-
-{%- if 'initial' in constants %}
-{{ signal_message_type }} {{ naming_convention.initial(message, signal) }} = {{ format_message_constant(constants['initial'], signal_message_type) }}
-{%- endif %}
-{%- if 'invalid' in constants %}
-{{ signal_message_type }} {{ naming_convention.invalid(message, signal) }} = {{ format_message_constant(constants['invalid'], signal_message_type) }}
-{%- endif %}
-{%- endif %}
-
 {%- if 'choices' in constants and constants['choices'] %}
 
 {% for choices in constants['choices'].values() -%}
 {% if choices|length == 1 -%}
-# '{{ choices[0].name }}' = {{ choices[0].value }}
 {{ signal_message_type }} {{ naming_convention.choice(message, signal, choices[0]) }} = {{ format_message_constant(choices[0].value, signal_message_type) }}
 {% else -%}
 {% for choice in choices -%}
-# '{{ choice.name }}' = {{ choice.value }}
 {% set choice_value = format_message_constant(choice.value, signal_message_type) -%}
 {{ signal_message_type }} {{ naming_convention.choice(message, signal, choice) }}__{{ choice_value }} = {{ choice_value }}
 {% endfor -%}
